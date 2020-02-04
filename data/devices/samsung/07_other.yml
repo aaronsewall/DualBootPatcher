@@ -411,3 +411,47 @@
     brightness_path: /sys/class/backlight/panel/brightness
     default_brightness: 255
     theme: portrait_hdpi
+
+- name: Galaxy View Wifi
+  id: gvwifiue
+  codenames:
+    - gvwifiue
+  architecture: armeabi-v7a
+
+  block_devs:
+    base_dirs:
+      - /dev/block/platform/13540000.dwmmc0/by-name
+    system:
+      - /dev/block/platform/13540000.dwmmc0/by-name/SYSTEM
+      - /dev/block/mmcblk0p20
+    cache:
+      - /dev/block/platform/13540000.dwmmc0/by-name/CACHE
+      - /dev/block/mmcblk0p21
+    data:
+      - /dev/block/platform/13540000.dwmmc0/by-name/USERDATA
+      - /dev/block/mmcblk0p22
+    boot:
+      - /dev/block/platform/13540000.dwmmc0/by-name/BOOT
+      - /dev/block/mmcblk0p10
+    recovery:
+      - /dev/block/platform/13540000.dwmmc0/by-name/RECOVERY
+      - /dev/block/mmcblk0p11
+    extra:
+      - /dev/block/platform/13540000.dwmmc0/by-name/RADIO
+      - /dev/block/platform/13540000.dwmmc0/by-name/OTA
+      - /dev/block/platform/13540000.dwmmc0/by-name/EFS
+      - /dev/block/mmcblk0p12
+      - /dev/block/mmcblk0p3
+      - /dev/block/mmcblk0p14
+
+  boot_ui:
+    supported: true
+    flags:
+      - TW_HAS_DOWNLOAD_MODE
+    graphics_backends:
+      - fbdev
+    brightness_path: /sys/devices/14800000.dsim/backlight/panel/brightness
+    max_brightness: 306
+    default_brightness: 162
+    pixel_format: RGBA_8888
+    theme: portrait_hdpi
