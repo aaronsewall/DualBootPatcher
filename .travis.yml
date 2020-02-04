@@ -1,32 +1,32 @@
 sudo: required
-
 services:
-  - docker
-
+- docker
 before_install:
-  # Clone DualBootPatcher Repository
-  - git clone --recursive https://github.com/aaronsewall/DualBootPatcher -b master DualBootPatcher/
-  # Pull docker images
-  - docker pull silverx2222/dualbootpatcher:9.3.0-14-base
-  - docker pull silverx2222/dualbootpatcher:9.3.0-14-android
-  - docker pull silverx2222/dualbootpatcher:9.3.0-14-linux
+- git clone --recursive https://github.com/aaronsewall/DualBootPatcher -b master DualBootPatcher/
+- docker pull silverx2222/dualbootpatcher:9.3.0-14-base
+- docker pull silverx2222/dualbootpatcher:9.3.0-14-android
+- docker pull silverx2222/dualbootpatcher:9.3.0-14-linux
 script:
-  # Make work directories 
-  - mkdir $HOME/.android
-  - mkdir -p ${TRAVIS_BUILD_DIR}/DualBootPatcher/builder/ && cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/
-  # Build APK
-  - |
-    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/builder/DualBootPatcher:rw,z" -v "${HOME}/.android:/builder/.android:rw,z" silverx2222/dualbootpatcher:9.3.0-14-android bash << EOF
-    cd DualBootPatcher/builder && cmake .. -DMBP_BUILD_TARGET=android -DMBP_BUILD_TYPE=debug && make -j16 && rm -rf assets && cpack && make apk -j16
-    make android-system_armeabi-v7a -j16 && make -C data/devices -j16
-    exit
-    EOF
+- mkdir $HOME/.android
+- mkdir -p ${TRAVIS_BUILD_DIR}/DualBootPatcher/builder/ && cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/
+- |
+  docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/builder/DualBootPatcher:rw,z" -v "${HOME}/.android:/builder/.android:rw,z" silverx2222/dualbootpatcher:9.3.0-14-android bash << EOF
+  cd DualBootPatcher/builder && cmake .. -DMBP_BUILD_TARGET=android -DMBP_BUILD_TYPE=debug && make -j16 && rm -rf assets && cpack && make apk -j16
+  make android-system_armeabi-v7a -j16 && make -C data/devices -j16
+  exit
+  EOF
 after_success:
-  - export TRAVIS_CURRENT_DATE=$(date +"%d%m%y-%Hh%Mm")
-  # Check output & md5sum
-  - ls -l ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
-  - md5sum ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
-  # Upload to transfer.sh
-  - cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/
-  - curl --upload-file ./Android_GUI-debug.apk https://transfer.sh/Android_GUI-debug-${TRAVIS_CURRENT_DATE}.apk > response 
-  - cat response
+- export TRAVIS_CURRENT_DATE=$(date +"%d%m%y-%Hh%Mm")
+- ls -l ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
+- md5sum ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
+- cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/
+- curl --upload-file ./Android_GUI-debug.apk https://transfer.sh/Android_GUI-debug-${TRAVIS_CURRENT_DATE}.apk
+  > response
+- cat response
+deploy:
+  provider: releases
+  api_key:
+    secure: YID+WHpjcYm6nme/0fk2uZo+tRiUc/BrjeLoYXFMBi8y4u19P62e9bBjwM4LdG+S2wsO6qhRTlCdaEbUVHbKSjiioSk/DWEsxKtOKWdqG/wP5tbKII2JnpnvBO3qVU/xOgZlj41S0gYJp9ZC/KU1l1aYiVhbaETFWDIMClAxGEYYruUzTp114GZBzGrOVi+SNHtp30OgB4wyZGM6iPkvmKsJigjqoRBEkLuHHxDePgPyLsVFhBjIDhYHRfN21Es7aFB36jCmDMsf2RBWHfRd/gaJ2RNvCEjD2OyjA5WHebZu2XET/3cwmm5xuVb/XC2WNC9iHmg5QcMfAzI5ps5/zLB4mByXQpvfCiUd8efvoeG0KyGai+LN2mlNZHGSzp3i+8pWlQ2zSbvpROswB7AlHDF8M5Ki00IJh0y/lXv/X2gRmKX7zQcChgrQG7Oz6KpYIxYGMNUBKKIyUaNtYgmw5EzLnnyytG0nUjytPN3fLz6oA7c1Es4kNHTHdgLgj+u7iToznXxYGcSJoyAyEPwYBjmJI4fpJh7U9ogdEavo4HAQ7cyhe8qmsTBIhBVclpu7Z7v895hG8wTKfqy31AAYvZgz3psOZkEJvoDMh/IZ59y4mR9yATg1HgWmcM3APJxA36Z8zxMu5I5EbH7PpQjvetQdrOrUZ+J9NKZ1DmXoBnU=
+  file: Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
+  on:
+    repo: aaronsewall/DualBootPatcher
