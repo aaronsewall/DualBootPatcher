@@ -27,6 +27,6 @@ deploy:
   provider: releases
   api_key:
     secure: 6V/10hA5qF8Gy29Ihn9xmyACIzGp7AVLZR8SMGkZy1vX+wOR/ByvS7UtITNuSG/bw7ANHAIQvtD0bEWTsP1zZPGKtMm9TQt+SJYQNH+DtWW1egqkJNnEkBXfZWVLp021iBMBXpHxemnIp6Q1+wJFyYsQ13148wkNIQF3stG6CKi1plBPGTHztgEm9L4BipaBlTLsD0jm+/XaYBM6OsQJ0x9a+Xc6kSdlzZZRf6bbbuVvyjr8HIP0O+p24MhM/Y6WRW+7y2CS35x0YKjWeVfFwt6pKRvoA8r8+TB7TX5aZrzuLwtXfdH50JduNoiLfOQDrc/+RwiekdGgbh5L6NPH3iWTogP2pPtS0AUpJOLLkVbQBAOuTh0dlKnxyQGijwxqtpJsoA1yGWxYSV8fK9T/ZBvbJ8CWSwVBlzbcd+MKDEDcZESsuMHRBsF5x02kro50aT3iHg4bjMyf0FmA9qh3zJWDfw8M8v79RZoZFMXtGM/M9xxad8kJe0pKrjHP5UtWFB2bhf4tb1Ga0zvVg1rnGHIpxSPt5QzOidGGNPDXsQ+DT2JabPv8qOIASaSAV8exv8peFtdaLTxBkphomqWCYQeFNkcdAr1vMwp0jwn8I0dflZqPVqtxnzLOBXgBr4wxKBETyembyqvz37SpNgtVJRnNgWuOnUE2vsa/hsF4+WQ=
-  file: "${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk"
+  file: "${TRAVIS_BUILD_DIR}/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk"
   on:
     repo: aaronsewall/DualBootPatcher
