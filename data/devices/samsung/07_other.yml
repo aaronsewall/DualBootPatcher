@@ -416,6 +416,7 @@
   id: gvwifiue
   codenames:
     - gvwifiue
+    - gvwifi
   architecture: armeabi-v7a
 
   block_devs:
