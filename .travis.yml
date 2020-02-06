@@ -8,11 +8,19 @@ before_install:
 - docker pull silverx2222/dualbootpatcher:9.3.0-14-linux
 script:
 - mkdir $HOME/.android
-- mkdir -p ${TRAVIS_BUILD_DIR}/DualBootPatcher/builder/ && cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/
+- mkdir -p ${TRAVIS_BUILD_DIR}/DualBootPatcher/builder/ && cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/docker run --rm -it -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/builder/DualBootPatcher:rw,z" -v "${HOME}/.android:/builder/.android:rw,z" -v "${HOME}/.ccache:/builder/.ccache:rw,z" -v 
+"${HOME}/.gradle:/builder/.gradle:rw,z" yshalsager/dualbootpatcher:9.3.0-4-linux bash
+
 - |
   docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/builder/DualBootPatcher:rw,z" -v "${HOME}/.android:/builder/.android:rw,z" silverx2222/dualbootpatcher:9.3.0-14-android bash << EOF
   cd DualBootPatcher/builder && cmake .. -DMBP_BUILD_TARGET=android -DMBP_BUILD_TYPE=debug && make -j16 && rm -rf assets && cpack && make apk -j16
   make android-system_armeabi-v7a -j16 && make -C data/devices -j16
+  exit
+  EOF
+- |
+  docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/builder/DualBootPatcher:rw,z" -v "${HOME}/.android:/builder/.android:rw,z" yshalsager/dualbootpatcher:9.3.0-7-linux bash << EOF
+  # Build Utilities Zip
+  cd ~/DualBootPatcher/builder && ./utilities/create.sh
   exit
   EOF
 after_success:
@@ -21,3 +29,4 @@ after_success:
 - md5sum ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/Android_GUI-debug.apk
 - cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/Android_GUI/build/outputs/apk/debug/
 - wget --method PUT --body-file=./Android_GUI-debug.apk https://transfer.sh/Android_GUI-debug.apk -O - -nv 
+- cd ${TRAVIS_BUILD_DIR}/DualBootPatcher/builder/utilities/ && wget --method PUT --body-file=./DualBootUtilities-9.3.0.zip https://transfer.sh/DualBootUtilities-9.3.0.zip -O - -nv 
